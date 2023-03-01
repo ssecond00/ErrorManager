@@ -63,6 +63,7 @@ public class ErrorServiceImpl implements ErrorService {
             existsId = errorRepository.existsById(id);
         }catch (Exception e){
             LOGGER.error("Ocurrio un error en la consulta a la base de datos. {}", e);
+            throw new RuntimeException("Ocurrio un error al persistir el error en base de datos.");
         }
         if (existsId){
             LOGGER.error("El id {} ya esta registrado en la Base de datos", id);
@@ -82,6 +83,7 @@ public class ErrorServiceImpl implements ErrorService {
                 errorRepository.save(error);
             }catch (Exception e){
                 LOGGER.error("Ocurrio un error al persistir el error en base de datos.", e);
+                throw new RuntimeException("Ocurrio un error al persistir el error en base de datos.");
             }
             LOGGER.error("Se persistio correctamente el error.");
             createErrorResponse = CreateErrorResponse.builder()

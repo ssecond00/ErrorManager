@@ -6,23 +6,37 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 @Data
 @Builder
 public class CreateErrorRequest {
-    @NonNull
+    @NotNull
+    @NotEmpty
+    @NotBlank
     @Schema(required = true, description = "Nombre del servicio en el que se genero el error.")
     private String serviceName;
-    @NonNull
+    @NotNull
+    @NotEmpty
+    @NotBlank
     @Schema(required = true, description = "Nombre del endpoint en el que se genero el error.")
     private String endpointName;
-    @NonNull
+    @NotNull
+    @NotEmpty
+    @NotBlank
     @Schema(required = true, description = "Codigo identificador del error.")
     private String errorId;
-    @NonNull
+    @NotNull
+    @NotEmpty
+    @NotBlank
     @Schema(required = true, description = "Mensaje de respuesta frente al error.")
     private String errorMessage;
 
-    @NonNull
+    @NotNull
+    @NotEmpty
+    @NotBlank
     @Schema(required = true, description = "Codigo de estado http asociado al error.")
     private String errorCode;
 }

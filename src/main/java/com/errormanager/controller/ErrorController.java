@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Tag(name = "Error Manager", description = "Microservicio para la gestion de los errores")
 @Validated
 @RestController
@@ -39,7 +41,7 @@ public class ErrorController {
     })
     @CrossOrigin
     @PostMapping(path = GET_ERROR, produces = "application/json")
-    public GetErrorResponse getError(@RequestBody GetErrorRequest getErrorRequest){
+    public GetErrorResponse getError(@Valid @RequestBody GetErrorRequest getErrorRequest){
         return errorService.getError(getErrorRequest);
     }
 
@@ -50,7 +52,7 @@ public class ErrorController {
     })
     @CrossOrigin
     @PostMapping(path = CREATE_ERROR, produces = "application/json")
-    public CreateErrorResponse createError(@RequestBody CreateErrorRequest createErrorRequest){
+    public CreateErrorResponse createError(@Valid @RequestBody CreateErrorRequest createErrorRequest){
         return errorService.createError(createErrorRequest);
     }
 
