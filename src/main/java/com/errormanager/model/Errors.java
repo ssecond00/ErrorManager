@@ -5,7 +5,8 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Data
 @Entity(name = "ERRORS")
