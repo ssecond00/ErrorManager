@@ -2,6 +2,7 @@ package com.errormanager.service.implementation;
 
 import com.errormanager.dto.createerror.CreateErrorRequest;
 import com.errormanager.dto.createerror.CreateErrorResponse;
+import com.errormanager.dto.exists.ExistsErrorResponse;
 import com.errormanager.dto.geterror.GetErrorRequest;
 import com.errormanager.dto.geterror.GetErrorResponse;
 import com.errormanager.model.Errors;
@@ -57,15 +58,8 @@ public class ErrorServiceImpl implements ErrorService {
         LOGGER.info("Comienza la ejecucion del metodo createError. Request: {}", createErrorRequest);
         String id = createErrorRequest.getServiceName() +"."+ createErrorRequest.getEndpointName() +"."+ createErrorRequest.getErrorId();
         LOGGER.info("Se generó el Id {}", id);
-        Boolean existsId = null;
-        CreateErrorResponse createErrorResponse = null;
-        try{
-            existsId = errorRepository.existsById(id);
-        }catch (Exception e){
-            LOGGER.error("Ocurrio un error en la consulta a la base de datos. {}", e);
-            throw new RuntimeException("Ocurrio un error al persistir el error en base de datos.");
-        }
-        if (existsId){
+        CreateErrorResponse createErrorResponse;
+        if (this.existsError(createErrorRequest.getServiceName(), createErrorRequest.getEndpointName(), createErrorRequest.getErrorId()).getExists()){
             LOGGER.error("El id {} ya esta registrado en la Base de datos", id);
             createErrorResponse = CreateErrorResponse.builder()
                     .created(false)
@@ -93,5 +87,34 @@ public class ErrorServiceImpl implements ErrorService {
             return createErrorResponse;
         }
 
+    }
+
+    @Override
+    public ExistsErrorResponse existsError(String service, String endpoint, String id) {
+        LOGGER.info("Comienza la ejecucion del metodo existsError. Request: service - {} endpoint - {} id - {}", service, endpoint,  id);
+        String existsId = service +"."+ endpoint +"."+ id;
+        LOGGER.info("Se generó el Id {}", existsId);
+        Boolean flagExists = null;
+        try{
+            flagExists = errorRepository.existsById(existsId);
+        }catch (Exception e){
+            LOGGER.error("Ocurrio un error en la consulta a la base de datos. {}", e);
+            throw new RuntimeException("Ocurrio un error al persistir el error en base de datos.");
+        }
+        if (flagExists) {
+            LOGGER.error("El id {} ya esta registrado en la Base de datos", id);
+            ExistsErrorResponse existsErrorResponse = ExistsErrorResponse.builder()
+                    .exists(Boolean.TRUE)
+                    .build();
+            LOGGER.info("Finaliza la ejecucion. Response: {}", existsErrorResponse);
+            return existsErrorResponse;
+        }else{
+            LOGGER.error("El id {} no se encuentra registrado en la Base de datos", id);
+            ExistsErrorResponse existsErrorResponse = ExistsErrorResponse.builder()
+                    .exists(Boolean.FALSE)
+                    .build();
+            LOGGER.info("Finaliza la ejecucion. Response: {}", existsErrorResponse);
+            return existsErrorResponse;
+        }
     }
 }
